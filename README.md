@@ -1,5 +1,4 @@
-# Title
-Projet sur la monodromie polynomiale
+# Monodromie polynomiale
 
 ## Presentation
 Ce projet s'est fait à l'issu de mes recherches durant mon année de MP*, le compte rendu de mes recherches ainsi qu'une vidéo présentant bien le phénomène se trouve dans le fichier TIPE.
