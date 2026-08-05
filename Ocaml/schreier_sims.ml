@@ -31,6 +31,15 @@ let get_pointnonfixe g =
             if g.eval.(k)=k then aux (k+1)
             else k in
     aux 0;;
+let string_to_perm (str:string):perm= (*ex "1 2 0"*)
+
+
+    let sub_str = String.split_on_char ' ' str in
+    let n =List.length sub_str in
+    let p = identity n in
+    let _=List.fold_left (fun i s->(p.eval.(i)<- (int_of_string s); i+1)) 0 sub_str in
+    p;;
+
 
 
 type sub_set={n:int;is_in:bool array}
@@ -71,8 +80,10 @@ let rec element_test (c : chain_link) (g : perm) : bool=
                     link.orbit.is_in.(delta) && 
                     (let r = get_representative delta link.transversal link.w true in 
                         element_test link.stabilizer (compose g r));;
-let schreir_sims (g_:perm list):chain_link = (*<g_>=G*)
+let schreier_sims (g_:perm list):chain_link = (*<g_>=G*)
+
     let rec extend (c:chain_link) (g:perm):chain_link =
+
         if element_test c g then c
         else 
             let g_inverse = inverse_perm g in
@@ -82,18 +93,22 @@ let schreir_sims (g_:perm list):chain_link = (*<g_>=G*)
                         let o =empty g.n in add o w;
                         let t = init_scheier_vector g.n in 
 
-                        let rec get_orbit  delta =
+                        let rec get_orbit  (delta:int) (t_delta:perm):perm =
                             let gamma = g.eval.(delta) in
-                            if gamma = w then  ()
-                            else (add o gamma;t.transition.(gamma)<-g_inverse;get_orbit gamma) in
-                        get_orbit w;
-                        Link({generator = [g];w=w;orbit=o;stabilizer=(extend TRIVIAL g);transversal=t})
+                            let t_gamma= compose t_delta g in
+                            if gamma = w then  t_delta
+                            else begin
+                                add o gamma;
+                                t.transition.(gamma)<-g_inverse;
+                                get_orbit gamma t_gamma end in
+                        let s = get_orbit w g in
+                        Link({generator = [g];w=w;orbit=o;stabilizer=(extend TRIVIAL s);transversal=t})
                         end
             |Link(link)->   begin
                             link.generator <- (g::link.generator);
                             let newelements = ref [] in
- 
-                            let  traiter a a_inverse i =
+                            let old_elements = {n=g.n;is_in =Array.init g.n (fun i ->link.orbit.is_in.(i))} in
+                            let  traiter a i =
                                 let gamma = a.eval.(i) in
                                     if link.orbit.is_in.(gamma) then
                                         let s = compose (get_representative i link.transversal link.w false) (compose a (get_representative gamma link.transversal link.w true)) in
@@ -105,13 +120,14 @@ let schreir_sims (g_:perm list):chain_link = (*<g_>=G*)
                                 let rec aux reste =
                                     match reste with 
                                     |[]->()
-                                    |a::tl->(traiter a (inverse_perm a) i;aux tl) in
+                                    |a::tl->(traiter a  i;aux tl) in
                                     aux link.generator in
 
 
                             for i = 0 to (g.n -1) do
-                                if link.orbit.is_in.(i) then 
-                                    traiter g g_inverse i
+                                if old_elements.is_in.(i) then 
+                                    traiter g i
+
                                 done;
                                 
                             let rec traiter_nouveaux ()=
@@ -136,4 +152,19 @@ let rec chain_link_size (c:chain_link):int = (*we suppose it is proper*)
 
 let rec factorial n =if n<2 then 1 else n*(factorial (n-1));;
 let est_generateur (n:int) (g_:perm list)= (*on suppose que g_ contient inverses*)
-    factorial n = chain_link_size (schreir_sims g_);;
+      let c = schreier_sims g_ in
+  let size = chain_link_size c in
+
+
+  factorial n = size;;
+
+
+let est_generateur_from_str (s_:string list):bool = (*on suppose pas que g_ contient inverses*)
+    let g_=add_inverses (List.map string_to_perm s_) in
+    let n=(List.hd g_).n in
+
+
+    est_generateur n g_;;
+
+
+    

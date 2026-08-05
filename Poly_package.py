@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.polynomial import Polynomial
-
+from schreier_sims import est_generateur
 
 def remove_duplicates(arr, h=1e-5):
     newarr=[]
@@ -69,10 +69,14 @@ class Poly_package:
         return ans+"$"
 
 
-    def __init__(self,i):
-        i=i%len(self.Generator_roots)
-        self.P=Poly_package.get_polynomial(i)
-        self.representation =Poly_package.get_representation(i)
+    def __init__(self,seed):
+        if seed == int:
+            i=seed
+            i=i%len(self.Generator_roots)
+            self.P=Poly_package.get_polynomial(i)
+            self.representation =Poly_package.get_representation(i)
+        else:
+            self.P=seed
         V = self.P(self.P.deriv().roots())
         self.V=remove_duplicates(V)
 
@@ -115,6 +119,7 @@ class Poly_package:
                     best_t,best_score=k/n,dist
         return 2*np.pi*best_t
     def visite_multiple(self,instructions,t0=0,t1=1):
+        """instructions de la forme (v_index,nb_tour) liste,  renvoie lun chemin suivant ces instructions"""
         path_segments = [] #tous def sur [0,1]
         waypoint =self.x0
         arg_shift =0
@@ -205,7 +210,7 @@ class Poly_package:
 
         t_values, lifted_curve =solve_z (self.P.deriv(),get_derivative(path,0,1),self.E[start_index],N=1000)
         return path_curve,t_values,lifted_curve
-        
+
 
 def get_derivative(f, t0,t1,h=1e-5):
     """ Returns callable f' """
@@ -269,3 +274,4 @@ def solve_z(P_prime, f_prime, z0, t0=0.0, t1=1.0, N=10000):
 
 def get_curve(path,t0=0,t1=1,N=10000):
     return np.array([path(t) for t in np.linspace(t0,t1,N)])
+
