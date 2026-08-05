@@ -87,7 +87,7 @@ let schreir_sims (g_:perm list):chain_link = (*<g_>=G*)
                             if gamma = w then  ()
                             else (add o gamma;t.transition.(gamma)<-g_inverse;get_orbit gamma) in
                         get_orbit w;
-                        Link({generator = [g];w=w;orbit=o;stabilizer=TRIVIAL;transversal=t})
+                        Link({generator = [g];w=w;orbit=o;stabilizer=(extend TRIVIAL g);transversal=t})
                         end
             |Link(link)->   begin
                             link.generator <- (g::link.generator);
@@ -102,17 +102,15 @@ let schreir_sims (g_:perm list):chain_link = (*<g_>=G*)
                                         ( add link.orbit gamma; newelements := gamma::(!newelements);link.transversal.transition.(gamma)<-(inverse_perm a)) in
 
                             let traiter_el i=
-                                if link.orbit.is_in.(i) then ()
-                                else    
-                                    let rec aux reste =
-                                        match reste with 
-                                        |[]->()
-                                        |a::tl->(traiter a (inverse_perm a) i;aux tl) in
+                                let rec aux reste =
+                                    match reste with 
+                                    |[]->()
+                                    |a::tl->(traiter a (inverse_perm a) i;aux tl) in
                                     aux link.generator in
 
 
                             for i = 0 to (g.n -1) do
-                                if not link.orbit.is_in.(i) then 
+                                if link.orbit.is_in.(i) then 
                                     traiter g g_inverse i
                                 done;
                                 
