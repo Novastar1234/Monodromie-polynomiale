@@ -27,9 +27,18 @@ python main.py
 ```
 
 ## Project structure
-
-main.py            matplotlib app. 
-
-Poly_package.py    crée les courbes et le texte à afficher. 
+Ocaml              ocaml files used for schreiers_sims
 
 TIPE               rendu de mon TIPE. 
+
+fulldemo.mp4.      demo of the visualization tool
+
+
+main.py            matplotlib app.
+
+Poly_package.py    crée les courbes et le texte à afficher
+
+scheier_sims.py    fais le lien avec les fichiers ocaml pour l'implémentation de Schreier_sims
+
+
+
