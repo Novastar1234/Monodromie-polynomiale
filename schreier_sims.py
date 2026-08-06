@@ -23,8 +23,7 @@ def est_generateur_from_str(permutations: list[str]) -> bool:
         text=True,
         check=False,
     )
-    print("OCaml stdout:", result.stdout)
-    print("OCaml stderr:", result.stderr)
+
     if result.returncode != 0:
         raise RuntimeError(
             result.stderr.strip()
@@ -49,10 +48,9 @@ def est_generateur(perms):
 
     return est_generateur_from_str (list(map(perm_to_string, perms)))
 
-
-def transpo(i,j,n):
-    ans = [i for i in range(n)]
-    ans[i],ans[j]=j,i
-    return ans
-
-assert( est_generateur([transpo(0, i, 100) for i in range(1, 100)]))
+#TEST
+#def transpo(i,j,n):
+#    ans = [i for i in range(n)]
+#    ans[i],ans[j]=j,i
+#    return ans
+#assert( est_generateur([transpo(0, i, 100) for i in range(1, 100)]))

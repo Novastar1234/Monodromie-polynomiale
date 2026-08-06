@@ -3,7 +3,10 @@
 ## Presentation
 Ce projet s'est fait à l'issu de mon travail de recherches mathématiques durant mon année de MP*, la synthèse théorique ainsi qu'une vidéo présentant bien le phénomène se trouve dans le fichier TIPE. 
 
-Pour le reste voici le code de la visualisation d'un relèvement polynomial. Vous en avez une démo ci-dessous.
+main.py lance une application matplotlib permettant de visualiser le relèvement polynomial et l'apparition du phénomène de monodromie. Vous en avez une démo de son fonctionnement ci-dessous.
+
+Enfin la fonction Is_MonP_Sn: numpy Polynomial ->bool dans Poly_package.py résout numériquement la question 
+avec rélèvement numérique + algorythme de schreier_sims
 ## Demonstration
 
 [Watch the demonstration](fulldemo.mp4)
@@ -32,7 +35,6 @@ Ocaml              ocaml files used for schreiers_sims
 TIPE               rendu de mon TIPE. 
 
 fulldemo.mp4.      demo of the visualization tool
-
 
 main.py            matplotlib app.
 

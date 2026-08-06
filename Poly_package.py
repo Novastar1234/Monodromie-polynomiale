@@ -8,7 +8,7 @@ def remove_duplicates(arr, h=1e-5):
         if not any(np.isclose(newarr,el,h)):
             newarr.append(el)
     return np.asarray(newarr)
-def permut_to_str(permut):
+def permut_to_str(permut:list):
 
     n=len(permut)
     if all(permut[i]==i for i in range(n)):
@@ -70,7 +70,7 @@ class Poly_package:
 
 
     def __init__(self,seed):
-        if seed == int:
+        if type(seed) == int:
             i=seed
             i=i%len(self.Generator_roots)
             self.P=Poly_package.get_polynomial(i)
@@ -103,6 +103,7 @@ class Poly_package:
                 return 2*self.r
             else:
                 return np.sqrt(np.abs(z)**2 - ((u*z.conj()).real )**2 )
+        if len(self.V)<2: return np.inf
         return min(dist_droite(a0,u,z) for z in self.V if z!=a0)
     def find_vantage_point(self,a0,z,N=10):
         """Retour l'argument d'un bon vantage point"""
@@ -194,6 +195,7 @@ class Poly_package:
         return permutation
 
     def get_permut_representation(self,instructions):
+        """ returns a string representing the permutation obtained using the instructed path"""
         if all((a[1]==0) for a in instructions):
             return "id"
         return permut_to_str(self.get_permutation(self.visite_multiple(instructions)))
@@ -210,7 +212,9 @@ class Poly_package:
 
         t_values, lifted_curve =solve_z (self.P.deriv(),get_derivative(path,0,1),self.E[start_index],N=1000)
         return path_curve,t_values,lifted_curve
+    def get_MonP_generateur(self):
 
+        return [ self.get_permutation( self.visite_multiple([(i,1)]) ) for i in range(len(self.V))]
 
 def get_derivative(f, t0,t1,h=1e-5):
     """ Returns callable f' """
@@ -219,7 +223,7 @@ def get_derivative(f, t0,t1,h=1e-5):
         b = min(t1,t+h)
         return (f(b) - f(a)) / (b-a)
     return f_prime
-def solve_z(P_prime, f_prime, z0, t0=0.0, t1=1.0, N=10000):
+def solve_z(P_prime:Polynomial, f_prime, z0, t0=0.0, t1=1.0, N=10000):
 
     """
     Solve the complex ODE:
@@ -274,4 +278,11 @@ def solve_z(P_prime, f_prime, z0, t0=0.0, t1=1.0, N=10000):
 
 def get_curve(path,t0=0,t1=1,N=10000):
     return np.array([path(t) for t in np.linspace(t0,t1,N)])
+
+
+def Is_MonP_Sn(P:Polynomial):
+    "Polynomial -> bool using get_MonP_generateur and schreir_sims"
+    poly_pack =Poly_package(P)
+    perms = poly_pack.get_MonP_generateur()
+    return est_generateur(perms)
 
