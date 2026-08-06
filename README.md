@@ -3,7 +3,7 @@
 ## Presentation
 Ce projet s'est fait à l'issu de mon travail de recherches mathématiques durant mon année de MP*, la synthèse théorique ainsi qu'une vidéo présentant bien le phénomène se trouve dans le fichier TIPE. 
 
-main.py lance une application matplotlib permettant de visualiser le relèvement polynomial et l'apparition du phénomène de monodromie. Vous en avez une démo de son fonctionnement ci-dessous.
+main.py lance une application matplotlib permettant de visualiser le relèvement polynomial et l'apparition du phénomène de monodromie. Une démo de son fonctionnement se trouve ci-dessous.
 
 Enfin la fonction Is_MonP_Sn: numpy Polynomial ->bool dans Poly_package.py résout numériquement la question 
 avec rélèvement numérique + algorythme de schreier_sims
